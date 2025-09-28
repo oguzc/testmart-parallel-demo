@@ -13,7 +13,11 @@
     "test:serial": "playwright test --workers=1",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "demo:bad-architecture": "node demo-runner.js bad",
+    "demo:good-architecture": "node demo-runner.js good",
+    "demo:comparison": "node demo-runner.js comparison",
+    "demo:performance": "node demo-runner.js performance"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
