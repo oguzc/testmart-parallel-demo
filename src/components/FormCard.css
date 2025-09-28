@@ -1,0 +1,108 @@
+/* FormCard Component Styles */
+
+.form-card-container {
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+  position: relative;
+}
+
+@media (min-width: 640px) {
+  .form-card-container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .form-card-container {
+    padding: 0 2rem;
+  }
+}
+
+.form-card-wrapper {
+  width: 100%;
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+.form-card {
+  padding: 4rem;
+  border: 1px solid #f3f4f6;
+  border-radius: 2rem;
+  background: linear-gradient(135deg, #ffffff 0%, #fefefe 50%, #fdfdfd 100%);
+  box-shadow: 
+    0 32px 64px -12px rgba(0, 0, 0, 0.12),
+    0 25px 50px -12px rgba(59, 130, 246, 0.08),
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+}
+
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 50%, #3b82f6 100%);
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    background-position: 200% 0;
+  }
+  50% {
+    background-position: -200% 0;
+  }
+}
+
+.form-card-header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+  padding-top: 2rem;
+  position: relative;
+}
+
+.form-card-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #1f2937 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.form-card-subtitle {
+  font-size: 1.125rem;
+  color: #6b7280;
+  font-weight: 500;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .form-card {
+    padding: 2rem 1.5rem;
+    border-radius: 1.5rem;
+  }
+  
+  .form-card-title {
+    font-size: 2rem;
+  }
+  
+  .form-card-subtitle {
+    font-size: 1rem;
+  }
+}

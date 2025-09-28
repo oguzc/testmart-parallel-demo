@@ -1,0 +1,58 @@
+/* SignInNotice Component Styles */
+.signin-notice {
+  background-color: #fffbeb;
+  border: 1px solid #fed7aa;
+  color: #92400e;
+  padding: var(--space-6) var(--space-6);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-8);
+  animation: slideUp 0.3s ease-out;
+}
+
+.signin-notice__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.signin-notice__info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-grow: 1;
+}
+
+.signin-notice__icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.signin-notice__message {
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.signin-notice__link {
+  color: #92400e;
+  font-weight: 600;
+  text-decoration: underline;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.signin-notice__link:hover {
+  color: #78350f;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

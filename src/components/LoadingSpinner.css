@@ -1,0 +1,49 @@
+/* LoadingSpinner Component Styles */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 16rem;
+  padding: var(--space-8);
+}
+
+.loading-spinner__animation {
+  position: relative;
+  margin-bottom: var(--space-4);
+}
+
+.loading-spinner__ring {
+  width: 4rem;
+  height: 4rem;
+  border: 4px solid;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.loading-spinner__ring--bg {
+  border-color: var(--neutral-200);
+}
+
+.loading-spinner__ring--primary {
+  border-color: var(--primary-600);
+  border-top-color: transparent;
+  animation: loading-spin 1s linear infinite;
+}
+
+.loading-spinner__message {
+  color: var(--neutral-600);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+@keyframes loading-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

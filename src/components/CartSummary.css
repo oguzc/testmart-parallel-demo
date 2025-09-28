@@ -1,0 +1,72 @@
+/* CartSummary Component Styles */
+
+.cart-summary {
+  margin-top: auto;
+  background: linear-gradient(to right, #eff6ff, #eef2ff);
+  padding: 2rem 4rem;
+  border-radius: 0 0 2rem 2rem;
+  width: calc(100% + 8rem);
+  margin-left: -4rem;
+  margin-right: -4rem;
+  margin-bottom: -4rem;
+}
+
+.cart-summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.cart-summary-shipping {
+  text-align: left;
+}
+
+.cart-summary-shipping-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.cart-summary-shipping-eligible {
+  font-size: 0.875rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.cart-summary-shipping-needed {
+  font-size: 0.875rem;
+  color: #ea580c;
+  font-weight: 600;
+}
+
+.cart-summary-total {
+  text-align: right;
+}
+
+.cart-summary-total-label {
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.cart-summary-total-amount {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #111827;
+}
+
+.cart-summary-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .cart-summary-buttons {
+    flex-direction: row;
+  }
+}
+
+.cart-summary-button {
+  flex: 1;
+}

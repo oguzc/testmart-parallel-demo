@@ -1,0 +1,53 @@
+/* ErrorMessage Component Styles */
+.error-message {
+  padding: var(--space-6) var(--space-6);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-8);
+  border: 1px solid;
+  animation: slideUp 0.3s ease-out;
+}
+
+.error-message--error {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.error-message--warning {
+  background-color: #fffbeb;
+  border-color: #fed7aa;
+  color: #92400e;
+}
+
+.error-message--info {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.error-message__content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.error-message__icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.error-message__text {
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
