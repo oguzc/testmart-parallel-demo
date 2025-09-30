@@ -1,19 +1,72 @@
 import type { User, Product, CartItem, Order } from '../types';
 
-// Simple in-memory data store for demo purposes
+// Simple localStorage-backed data store for demo purposes
 // In a real app, this would be replaced with a proper database
 export class MockDataStore {
-  private static users: Map<string, User> = new Map();
-  private static products: Map<string, Product> = new Map();
-  private static cartItems: Map<string, CartItem> = new Map();
-  private static orders: Map<string, Order> = new Map();
+  private static STORAGE_KEYS = {
+    USERS: 'testmart_db_users',
+    PRODUCTS: 'testmart_db_products',
+    CART_ITEMS: 'testmart_db_cart_items',
+    ORDERS: 'testmart_db_orders'
+  };
+
+  // Helper methods for localStorage persistence
+  private static loadFromStorage<T>(key: string): Map<string, T> {
+    // Check if localStorage is available (not in Node.js context)
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return new Map();
+    }
+    
+    try {
+      const data = localStorage.getItem(key);
+      if (data) {
+        const obj = JSON.parse(data);
+        return new Map(Object.entries(obj));
+      }
+    } catch (error) {
+      console.error(`Error loading ${key} from storage:`, error);
+    }
+    return new Map();
+  }
+
+  private static saveToStorage<T>(key: string, map: Map<string, T>): void {
+    // Check if localStorage is available (not in Node.js context)
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return;
+    }
+    
+    try {
+      const obj = Object.fromEntries(map);
+      localStorage.setItem(key, JSON.stringify(obj));
+    } catch (error) {
+      console.error(`Error saving ${key} to storage:`, error);
+    }
+  }
+
+  private static get users(): Map<string, User> {
+    return this.loadFromStorage<User>(this.STORAGE_KEYS.USERS);
+  }
+
+  private static get products(): Map<string, Product> {
+    return this.loadFromStorage<Product>(this.STORAGE_KEYS.PRODUCTS);
+  }
+
+  private static get cartItems(): Map<string, CartItem> {
+    return this.loadFromStorage<CartItem>(this.STORAGE_KEYS.CART_ITEMS);
+  }
+
+  private static get orders(): Map<string, Order> {
+    return this.loadFromStorage<Order>(this.STORAGE_KEYS.ORDERS);
+  }
   
   // User operations
   static async createUser(user: User): Promise<User> {
-    if (this.users.has(user.email)) {
+    const users = this.users;
+    if (users.has(user.email)) {
       throw new Error('User with this email already exists');
     }
-    this.users.set(user.email, user);
+    users.set(user.email, user);
+    this.saveToStorage(this.STORAGE_KEYS.USERS, users);
     return user;
   }
   
@@ -30,7 +83,9 @@ export class MockDataStore {
   
   // Product operations
   static async createProduct(product: Product): Promise<Product> {
-    this.products.set(product.id, product);
+    const products = this.products;
+    products.set(product.id, product);
+    this.saveToStorage(this.STORAGE_KEYS.PRODUCTS, products);
     return product;
   }
   
@@ -43,37 +98,48 @@ export class MockDataStore {
   }
   
   static async updateProductStock(id: string, newStock: number): Promise<void> {
-    const product = this.products.get(id);
+    const products = this.products;
+    const product = products.get(id);
     if (product) {
       product.stock = newStock;
-      this.products.set(id, product);
+      products.set(id, product);
+      this.saveToStorage(this.STORAGE_KEYS.PRODUCTS, products);
     }
   }
   
   // Cart operations
   static async createCartItem(item: CartItem): Promise<CartItem> {
-    this.cartItems.set(item.id, item);
+    const cartItems = this.cartItems;
+    cartItems.set(item.id, item);
+    this.saveToStorage(this.STORAGE_KEYS.CART_ITEMS, cartItems);
     return item;
   }
   
   static async getCartItemsByUserId(userId: string): Promise<CartItem[]> {
     // In a real app, we'd filter by user session or user ID
     // For demo purposes, we'll return all cart items
+    console.log('Getting cart items for user:', userId);
     return Array.from(this.cartItems.values());
   }
   
   static async updateCartItem(item: CartItem): Promise<CartItem> {
-    this.cartItems.set(item.id, item);
+    const cartItems = this.cartItems;
+    cartItems.set(item.id, item);
+    this.saveToStorage(this.STORAGE_KEYS.CART_ITEMS, cartItems);
     return item;
   }
   
   static async removeCartItem(id: string): Promise<void> {
-    this.cartItems.delete(id);
+    const cartItems = this.cartItems;
+    cartItems.delete(id);
+    this.saveToStorage(this.STORAGE_KEYS.CART_ITEMS, cartItems);
   }
   
   // Order operations
   static async createOrder(order: Order): Promise<Order> {
-    this.orders.set(order.id, order);
+    const orders = this.orders;
+    orders.set(order.id, order);
+    this.saveToStorage(this.STORAGE_KEYS.ORDERS, orders);
     return order;
   }
   
@@ -83,22 +149,29 @@ export class MockDataStore {
   
   // Cleanup methods for testing
   static clearAllData(): void {
-    this.users.clear();
-    this.products.clear();
-    this.cartItems.clear();
-    this.orders.clear();
+    localStorage.removeItem(this.STORAGE_KEYS.USERS);
+    localStorage.removeItem(this.STORAGE_KEYS.PRODUCTS);
+    localStorage.removeItem(this.STORAGE_KEYS.CART_ITEMS);
+    localStorage.removeItem(this.STORAGE_KEYS.ORDERS);
   }
   
   static clearUserData(): void {
-    this.users.clear();
+    localStorage.removeItem(this.STORAGE_KEYS.USERS);
   }
   
   static clearProductData(): void {
-    this.products.clear();
+    localStorage.removeItem(this.STORAGE_KEYS.PRODUCTS);
   }
   
   // Initialize with some sample data
   static async initializeSampleData(): Promise<void> {
+    // Only initialize if products don't already exist
+    const existingProducts = await this.getProducts();
+    if (existingProducts.length > 0) {
+      console.log('Sample data already initialized, skipping...');
+      return;
+    }
+    
     // Sample products
     const sampleProducts: Product[] = [
       {
