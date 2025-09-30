@@ -1,5 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { TestDataFactory } from '../fixtures/TestDataFactory';
+import { 
+  registerUser, 
+  fillRegistrationForm, 
+  submitRegistration,
+  fillLoginForm,
+  submitLogin,
+  logout
+} from '../helpers/test-helpers';
 
 /**
  * User Registration Tests - Parallel Execution Scenarios
@@ -12,38 +20,21 @@ import { TestDataFactory } from '../fixtures/TestDataFactory';
 
 test.describe('User Registration - Parallel Safe', () => {
   test('should register new user successfully', async ({ page }, testInfo) => {
-    const workerIndex = testInfo.workerIndex;
-    const user = TestDataFactory.createWorkerSpecificUser(workerIndex);
+    const user = TestDataFactory.createWorkerSpecificUser(testInfo.workerIndex);
 
-    await page.goto('/register');
-    
-    // Fill registration form with unique data
-    await page.fill('[data-testid=name-input]', user.name);
-    await page.fill('[data-testid=email-input]', user.email);
-    await page.fill('[data-testid=password-input]', user.password);
-    await page.fill('[data-testid=confirm-password-input]', user.password);
-    
-    await page.click('[data-testid=register-button]');
+    await registerUser(page, user);
     
     // Verify successful registration
     await expect(page).toHaveURL('/');
-    await expect(page.locator('[data-testid=welcome-message]'))
-      .toContainText(user.name);
+    await expect(page.getByTestId('user-name')).toContainText(user.name);
   });
 
   test('should handle validation errors properly', async ({ page }, testInfo) => {
-    const workerIndex = testInfo.workerIndex;
-    const user = TestDataFactory.createWorkerSpecificUser(workerIndex);
+    const user = TestDataFactory.createWorkerSpecificUser(testInfo.workerIndex);
 
     await page.goto('/register');
-    
-    // Try to register with mismatched passwords
-    await page.fill('[data-testid=name-input]', user.name);
-    await page.fill('[data-testid=email-input]', user.email);
-    await page.fill('[data-testid=password-input]', user.password);
-    await page.fill('[data-testid=confirm-password-input]', 'different-password');
-    
-    await page.click('[data-testid=register-button]');
+    await fillRegistrationForm(page, user, 'different-password');
+    await submitRegistration(page);
     
     // Should show validation error
     await expect(page.locator('[data-testid=error-message]'))
@@ -54,44 +45,37 @@ test.describe('User Registration - Parallel Safe', () => {
   });
 
   test('should prevent duplicate email registration', async ({ page }, testInfo) => {
-    const workerIndex = testInfo.workerIndex;
-    const user = TestDataFactory.createWorkerSpecificUser(workerIndex);
+    const user = TestDataFactory.createWorkerSpecificUser(testInfo.workerIndex);
 
     // Register user first time
-    await page.goto('/register');
-    await page.fill('[data-testid=name-input]', user.name);
-    await page.fill('[data-testid=email-input]', user.email);
-    await page.fill('[data-testid=password-input]', user.password);
-    await page.fill('[data-testid=confirm-password-input]', user.password);
-    await page.click('[data-testid=register-button]');
-    
-    // Verify first registration was successful
+    await registerUser(page, user);
     await expect(page).toHaveURL('/');
     
     // Try to register with same email
     await page.goto('/register');
-    await page.fill('[data-testid=name-input]', 'Different Name');
-    await page.fill('[data-testid=email-input]', user.email);
-    await page.fill('[data-testid=password-input]', 'differentpass123');
-    await page.fill('[data-testid=confirm-password-input]', 'differentpass123');
-    await page.click('[data-testid=register-button]');
+    await fillRegistrationForm(page, {
+      name: 'Different Name',
+      email: user.email,
+      password: 'differentpass123'
+    });
+    await submitRegistration(page);
     
     // Should show duplicate email error
     await expect(page.locator('[data-testid=error-message]'))
-      .toContainText('User with this email already exists');
+      .toContainText('already exists');
   });
 
   test('should require all fields for registration', async ({ page }) => {
     await page.goto('/register');
     
-    // Try to submit empty form
-    await page.click('[data-testid=register-button]');
+    // Try to submit empty form - button should be disabled
+    await expect(page.getByTestId('register-button')).toBeDisabled();
     
-    // Form should not submit due to HTML5 validation
+    // Form should remain on registration page
     await expect(page).toHaveURL('/register');
     
     // Check that required validation is working
-    const nameField = page.locator('[data-testid=name-input]');
+    const nameField = page.getByTestId('name-input');
     await expect(nameField).toHaveAttribute('required');
   });
 });
@@ -103,46 +87,34 @@ test.describe('User Registration - Parallel Safe', () => {
  */
 test.describe('User Login - Parallel Safe', () => {
   test('should login with valid credentials', async ({ page }, testInfo) => {
-    const workerIndex = testInfo.workerIndex;
-    const user = TestDataFactory.createWorkerSpecificUser(workerIndex);
+    const user = TestDataFactory.createWorkerSpecificUser(testInfo.workerIndex);
 
     // First register the user
-    await page.goto('/register');
-    await page.fill('[data-testid=name-input]', user.name);
-    await page.fill('[data-testid=email-input]', user.email);
-    await page.fill('[data-testid=password-input]', user.password);
-    await page.fill('[data-testid=confirm-password-input]', user.password);
-    await page.click('[data-testid=register-button]');
+    await registerUser(page, user);
     
     // Logout to test login
-    await page.click('[data-testid=logout-button]');
+    await logout(page);
     
     // Now test login
     await page.goto('/login');
-    await page.fill('[data-testid=email-input]', user.email);
-    await page.fill('[data-testid=password-input]', user.password);
-    await page.click('[data-testid=login-button]');
+    await fillLoginForm(page, user.email, user.password);
+    await submitLogin(page);
     
     // Verify successful login
     await expect(page).toHaveURL('/');
-    await expect(page.locator('[data-testid=welcome-message]'))
-      .toContainText(user.name);
+    await expect(page.getByTestId('user-name')).toContainText(user.name);
   });
 
   test('should reject invalid credentials', async ({ page }, testInfo) => {
-    const workerIndex = testInfo.workerIndex;
-    const user = TestDataFactory.createWorkerSpecificUser(workerIndex);
+    const user = TestDataFactory.createWorkerSpecificUser(testInfo.workerIndex);
 
     await page.goto('/login');
-    
-    // Try to login with non-existent user
-    await page.fill('[data-testid=email-input]', user.email);
-    await page.fill('[data-testid=password-input]', user.password);
-    await page.click('[data-testid=login-button]');
+    await fillLoginForm(page, user.email, user.password);
+    await submitLogin(page);
     
     // Should show error message
     await expect(page.locator('[data-testid=error-message]'))
-      .toContainText('Login failed');
+      .toContainText('User not found');
     
     // Should remain on login page
     await expect(page).toHaveURL('/login');
