@@ -16,8 +16,11 @@ import OrderConfirmationPage from './pages/OrderConfirmationPage';
 
 function App() {
   useEffect(() => {
-    // Initialize sample data when the app loads
-    MockDataStore.initializeSampleData();
+    // Initialize sample data when the app loads (only if not already initialized)
+    const initData = async () => {
+      await MockDataStore.initializeSampleData();
+    };
+    initData();
   }, []);
 
   return (
