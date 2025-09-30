@@ -49,7 +49,7 @@ const CheckoutPage = () => {
       };
 
       await ApiDataStore.createOrder(order);
-      clearCart();
+      await clearCart();
 
       // Redirect to order confirmation page
       navigate('/order-confirmation', { 
