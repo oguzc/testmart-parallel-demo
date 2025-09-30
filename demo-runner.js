@@ -1,83 +1,93 @@
 #!/usr/bin/env node
 
 /**
- * 🎭 BAD vs GOOD Architecture Demo Runner
+ * 🎭 TestMart Parallel Testing Demo Runner
  * 
- * This script demonstrates the difference between bad and good parallel testing architecture
- * by running the same tests with different approaches and showing the results.
+ * This script demonstrates parallel testing with a shared database backend.
+ * Shows both good practices (worker isolation) and bad practices (race conditions).
  * 
  * Usage:
- *   npm run demo:bad-architecture    # Show failing parallel tests
- *   npm run demo:good-architecture   # Show working parallel tests
+ *   npm run demo:bad-architecture    # Show real database conflicts
+ *   npm run demo:good-architecture   # Show proper worker isolation
  *   npm run demo:comparison          # Run both and compare results
  */
 
-const { execSync } = require('child_process');
-const path = require('path');
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 class ArchitectureDemo {
   
   static async runBadArchitectureDemo() {
     console.log('\n🔥 RUNNING BAD ARCHITECTURE DEMO');
     console.log('=====================================');
-    console.log('This will demonstrate common parallel testing failures...\n');
+    console.log('This demonstrates REAL database conflicts with shared data...\n');
     
     try {
-      // Run bad architecture tests with multiple workers
+      // Run bad architecture tests - these should fail with real conflicts
       const result = execSync(
         'npx playwright test tests/examples/bad-architecture/ --workers=4 --reporter=list',
         { 
           cwd: process.cwd(),
           encoding: 'utf8',
-          stdio: 'pipe'
+          stdio: 'pipe',
+          timeout: 60000
         }
       );
       
-      console.log('❌ UNEXPECTED: Bad tests passed (they should fail in parallel!)');
+      console.log('❌ UNEXPECTED: Bad tests passed (they should fail with conflicts!)');
       console.log(result);
       
     } catch (error) {
-      console.log('✅ EXPECTED: Bad architecture tests failed in parallel execution');
-      console.log('🎯 Common issues demonstrated:');
-      console.log('   - Shared state conflicts between workers');
-      console.log('   - Race conditions on global variables');
-      console.log('   - "Email already exists" errors');
-      console.log('   - "Username already taken" conflicts');
-      console.log('   - Unpredictable test results\n');
+      console.log('✅ EXPECTED: Bad architecture tests failed with database conflicts!');
+      console.log('🎯 Real issues demonstrated:');
+      console.log('   - "User with email X already exists" (unique violations)');
+      console.log('   - Race conditions on shared database');
+      console.log('   - Unpredictable test results');
+      console.log('   - Workers fighting over same data\n');
       
       // Show specific error patterns
-      const errorOutput = error.stdout || error.message;
-      const lines = errorOutput.split('\n').slice(0, 20); // Show first 20 lines
-      console.log('📋 Sample Error Output:');
-      console.log('------------------------');
-      lines.forEach(line => {
-        if (line.includes('Error') || line.includes('failed') || line.includes('✘')) {
-          console.log(`🔴 ${line}`);
-        }
-      });
+      const errorOutput = error.stdout || error.stderr || error.message || '';
+      if (errorOutput) {
+        const lines = errorOutput.split('\n');
+        console.log('📋 Sample Conflicts:');
+        console.log('--------------------');
+        lines.forEach((line) => {
+          if (line.includes('already exists') || 
+              line.includes('Error') || 
+              line.includes('failed') ||
+              line.includes('✘')) {
+            console.log(`🔴 ${line.trim()}`);
+          }
+        });
+      }
+      
+      console.log('\n🎯 This is why worker isolation is essential with shared databases!');
     }
   }
 
   static async runGoodArchitectureDemo() {
     console.log('\n✅ RUNNING GOOD ARCHITECTURE DEMO');
     console.log('=====================================');
-    console.log('This will demonstrate proper parallel testing patterns...\n');
+    console.log('This demonstrates proper worker isolation with shared database...\n');
     
     try {
+      // Run our real e2e tests with good architecture
       const result = execSync(
-        'npx playwright test tests/examples/good-architecture/ --workers=4 --reporter=list',
+        'npx playwright test tests/e2e/ --workers=4 --reporter=list',
         { 
           cwd: process.cwd(),
           encoding: 'utf8',
-          stdio: 'pipe'
+          stdio: 'pipe',
+          timeout: 60000
         }
       );
       
-      console.log('✅ SUCCESS: Good architecture tests passed in parallel!');
+      console.log('✅ SUCCESS: All e2e tests passed with parallel execution!');
       console.log('🎯 Key patterns demonstrated:');
-      console.log('   ✅ Worker-specific test data generation');
-      console.log('   ✅ No shared global state');
-      console.log('   ✅ Independent test execution');
+      console.log('   ✅ Worker-specific data via TestDataFactory');
+      console.log('   ✅ Unique emails/users per worker');
+      console.log('   ✅ Shared database without conflicts');
       console.log('   ✅ Reliable, predictable results');
       console.log('   ✅ Scales to any number of workers\n');
       
@@ -86,7 +96,7 @@ class ArchitectureDemo {
       const passedTests = lines.filter(line => line.includes('✓') || line.includes('passed'));
       console.log('📊 Test Results:');
       console.log('----------------');
-      passedTests.slice(0, 10).forEach(line => {
+      passedTests.slice(0, 15).forEach(line => {
         console.log(`🟢 ${line.trim()}`);
       });
       
@@ -112,53 +122,55 @@ class ArchitectureDemo {
     console.log('\n📋 SUMMARY & KEY TAKEAWAYS');
     console.log('============================');
     console.log('❌ BAD Architecture Problems:');
-    console.log('   • Global variables cause race conditions');
-    console.log('   • Hardcoded data creates conflicts');
-    console.log('   • Tests depend on each other');
+    console.log('   • Hardcoded emails cause "already exists" errors');
+    console.log('   • Workers compete for same database records');
+    console.log('   • Race conditions on shared data');
     console.log('   • Unpredictable, flaky results');
-    console.log('   • Doesn\'t scale with worker count\n');
+    console.log('   • Can\'t scale with more workers\n');
     
     console.log('✅ GOOD Architecture Solutions:');
-    console.log('   • Worker-specific data generation');
-    console.log('   • Complete test isolation');
-    console.log('   • Independent test execution');
+    console.log('   • TestDataFactory generates unique data per worker');
+    console.log('   • Each worker has isolated test data');
+    console.log('   • Shared database works safely');
     console.log('   • Predictable, reliable results');
     console.log('   • Scales to unlimited workers\n');
     
-    console.log('🚀 NEXT STEPS:');
-    console.log('   1. Always use TestDataFactory for unique data');
-    console.log('   2. Never share state between tests');
-    console.log('   3. Make tests completely independent');
-    console.log('   4. Use worker-specific identifiers');
-    console.log('   5. Test with multiple worker counts\n');
+    console.log('🚀 IMPLEMENTATION:');
+    console.log('   • Express API on :3001');
+    console.log('   • Shared JSON database: database/shared-db.json');
+    console.log('   • TestDataFactory: Worker-specific emails/users');
+    console.log('   • 15 products with varying stock levels');
+    console.log('   • Real conflicts demonstrated in bad-architecture tests\n');
   }
 
   static async runPerformanceComparison() {
     console.log('\n⚡ PERFORMANCE COMPARISON');
     console.log('==========================');
+    console.log('Testing good architecture with different worker counts...\n');
     
-    const workerCounts = [1, 2, 4, 8];
+    const workerCounts = [1, 2, 4];
     const results = {};
     
     for (const workers of workerCounts) {
-      console.log(`\nTesting with ${workers} worker(s)...`);
+      console.log(`Testing with ${workers} worker(s)...`);
       
       try {
         const startTime = Date.now();
         
         execSync(
-          `npx playwright test tests/examples/good-architecture/ --workers=${workers} --reporter=dot`,
+          `npx playwright test tests/e2e/ --workers=${workers} --reporter=dot`,
           { 
             cwd: process.cwd(),
             encoding: 'utf8',
-            stdio: 'pipe'
+            stdio: 'pipe',
+            timeout: 120000
           }
         );
         
         const duration = Date.now() - startTime;
         results[workers] = duration;
         
-        console.log(`✅ ${workers} worker(s): ${duration}ms`);
+        console.log(`✅ ${workers} worker(s): ${(duration/1000).toFixed(1)}s`);
         
       } catch (error) {
         console.log(`❌ ${workers} worker(s): Failed`);
@@ -171,11 +183,13 @@ class ArchitectureDemo {
     Object.entries(results).forEach(([workers, duration]) => {
       if (typeof duration === 'number') {
         const speedup = workers > 1 ? (results[1] / duration).toFixed(2) : '1.00';
-        console.log(`${workers} worker(s): ${duration}ms (${speedup}x speedup)`);
+        console.log(`${workers} worker(s): ${(duration/1000).toFixed(1)}s (${speedup}x speedup)`);
       } else {
         console.log(`${workers} worker(s): ${duration}`);
       }
     });
+    
+    console.log('\n💡 Worker isolation allows safe parallel execution!');
   }
 }
 
