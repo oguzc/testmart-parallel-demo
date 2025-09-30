@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { TestDataFactory } from '../fixtures/TestDataFactory';
 import { registerUser } from '../helpers/test-helpers';
-import { resetDatabase } from '../helpers/db-reset';
 
 /**
  * Shopping Cart Tests - Parallel Execution Scenarios
@@ -14,12 +13,6 @@ import { resetDatabase } from '../helpers/db-reset';
  */
 
 test.describe('Shopping Cart - Parallel Safe', () => {
-
-  // Reset database after all tests in this file complete
-  // This ensures cleanup even when running individual tests from Test Explorer
-  test.afterAll(async () => {
-    resetDatabase();
-  });
 
   test('should add product to cart successfully', async ({ page }, testInfo) => {
     const user = TestDataFactory.createWorkerSpecificUser(testInfo.workerIndex);

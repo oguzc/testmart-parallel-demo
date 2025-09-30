@@ -7,7 +7,6 @@ import {
   proceedToCheckout,
   registerUser
 } from '../helpers/test-helpers';
-import { resetDatabase } from '../helpers/db-reset';
 
 /**
  * Checkout Process Tests - Parallel Execution Scenarios
@@ -20,11 +19,6 @@ import { resetDatabase } from '../helpers/db-reset';
  */
 
 test.describe('Checkout Process - Parallel Safe', () => {
-
-  // Reset database after all tests in this file complete
-  test.afterAll(async () => {
-    resetDatabase();
-  });
 
   test('should complete full checkout process', async ({ page }, testInfo) => {
     const flowData = TestDataFactory.createUserFlowData(testInfo.workerIndex);
