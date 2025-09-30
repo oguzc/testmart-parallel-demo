@@ -151,8 +151,10 @@ app.post('/api/products/reserve', (req, res) => {
     });
   }
   
-  product.stock -= quantity;
-  writeDB(db);
+  // NOTE: Stock is NOT decreased here - only checked for availability
+  // Stock should only decrease when an order is completed, not when added to cart
+  // product.stock -= quantity;
+  // writeDB(db);
   
   res.json({ success: true, remainingStock: product.stock });
 });
@@ -308,25 +310,16 @@ app.post('/api/counters/increment', (req, res) => {
 // ===== ADMIN/TESTING ENDPOINTS =====
 
 app.post('/api/admin/reset', (req, res) => {
-  const initialData = {
-    users: [
-      {
-        email: 'demo@testmart.com',
-        name: 'Demo User',
-        password: 'Password123!',
-        createdAt: Date.now()
-      }
-    ],
-    products: [
-      { sku: 'PROD-001', name: 'Shared Product 1', stock: 10 },
-      { sku: 'PROD-002', name: 'Shared Product 2', stock: 5 }
-    ],
-    orders: [],
-    counters: { userCount: 1, orderCount: 1000, cartCount: 0 }
-  };
+  // Load from initial-db.json instead of hardcoding
+  const initialDbPath = path.join(__dirname, '../database/initial-db.json');
   
-  writeDB(initialData);
-  res.json({ success: true, message: 'Database reset to initial state' });
+  if (fs.existsSync(initialDbPath)) {
+    const initialData = JSON.parse(fs.readFileSync(initialDbPath, 'utf-8'));
+    writeDB(initialData);
+    res.json({ success: true, message: 'Database reset to initial state from initial-db.json' });
+  } else {
+    res.status(500).json({ error: 'initial-db.json not found' });
+  }
 });
 
 app.get('/api/admin/stats', (req, res) => {
