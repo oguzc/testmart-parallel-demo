@@ -290,9 +290,11 @@ const RegisterPage = () => {
 
             {/* Terms and Conditions */}
             <div className="terms-section">
-              <label className="terms-checkbox">
+              <label className="terms-checkbox" htmlFor="terms-checkbox">
                 <input
                   type="checkbox"
+                  id="terms-checkbox"
+                  name="acceptTerms"
                   checked={acceptTerms}
                   onChange={(e) => setAcceptTerms(e.target.checked)}
                   className="checkbox-input"

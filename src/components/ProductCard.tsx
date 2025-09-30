@@ -20,7 +20,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
     <div
       className="product-card group"
       style={{ animationDelay: `${index * 0.1}s` }}
-      data-testid={`product-${product.id}`}
+      data-testid="product-card"
+      data-product-id={product.id}
     >
       <Link to={`/product/${product.id}`} className="product-card__link">
         <div className="product-card__image-container">

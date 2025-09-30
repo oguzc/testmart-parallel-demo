@@ -63,14 +63,14 @@ const Header = () => {
                 <Link 
                   to="/login"
                   className="header-auth-link"
-                  data-testid="login-button"
+                  data-testid="sign-in-button"
                 >
                   Sign In
                 </Link>
                 <Link 
                   to="/register"
                   className="header-auth-link header-auth-link--primary"
-                  data-testid="register-button"
+                  data-testid="sign-up-button"
                 >
                   Sign Up
                 </Link>
