@@ -41,7 +41,7 @@ export class TestDataFactory {
       id,
       email: `test-user-${timestamp}-${randomId}@testmart.com`,
       name: `Test User ${randomId}`,
-      password: 'TestPassword123!',
+      password: 'Password123!',
       username: `testuser_${randomId}`,
       phone: `+1${Math.floor(Math.random() * 9000000000) + 1000000000}`,
       ...overrides
@@ -73,7 +73,7 @@ export class TestDataFactory {
   static getWorkerSpecificData(workerIndex: number) {
     return {
       userPrefix: `worker${workerIndex}`,
-      emailDomain: `worker${workerIndex}.testmart.local`,
+      emailDomain: `testmart.com`,
       productSuffix: `-w${workerIndex}`,
       dataNamespace: `test_data_worker_${workerIndex}`,
       portOffset: workerIndex * 100,
@@ -177,13 +177,18 @@ export class TestDataFactory {
   static async registerAndLoginUser(page: Page, user: TestUser): Promise<void> {
     // Register user
     await page.goto('/register');
+    await page.fill('[data-testid=name-input]', user.name);
     await page.fill('[data-testid=email-input]', user.email);
     await page.fill('[data-testid=password-input]', user.password);
     await page.fill('[data-testid=confirm-password-input]', user.password);
+    
+    // ✅ CRITICAL: Accept terms of service (click label to activate custom checkbox)
+    await page.click('label[for="terms-checkbox"]');
+    
     await page.click('[data-testid=register-button]');
     
-    // Wait for registration success
-    await page.waitForSelector('[data-testid=success-message]', { timeout: 5000 });
+    // ✅ CRITICAL: Wait for navigation (there's a 1.5s delay)
+    await page.waitForURL('/', { timeout: 10000 });
     
     // Login user
     await page.goto('/login');
