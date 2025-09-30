@@ -1,0 +1,153 @@
+{
+  "users": [
+    {
+      "email": "demo@testmart.com",
+      "name": "Demo User",
+      "createdAt": 1700000000000
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "sku": "PROD-001",
+      "name": "Premium Wireless Headphones",
+      "description": "High-quality wireless headphones with noise cancellation",
+      "price": 299.99,
+      "stock": 10,
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500"
+    },
+    {
+      "id": "2",
+      "sku": "PROD-002",
+      "name": "Smart Fitness Watch",
+      "description": "Track your fitness goals with this smart watch",
+      "price": 199.99,
+      "stock": 5,
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500"
+    },
+    {
+      "id": "3",
+      "sku": "PROD-003",
+      "name": "Laptop Backpack",
+      "description": "Durable backpack with laptop compartment",
+      "price": 79.99,
+      "stock": 20,
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500"
+    },
+    {
+      "id": "4",
+      "sku": "PROD-004",
+      "name": "Mechanical Keyboard",
+      "description": "RGB mechanical keyboard with blue switches",
+      "price": 149.99,
+      "stock": 15,
+      "image": "https://images.unsplash.com/photo-1595225476474-87563907a212?w=500"
+    },
+    {
+      "id": "5",
+      "sku": "PROD-005",
+      "name": "Wireless Mouse",
+      "description": "Ergonomic wireless mouse with precision tracking",
+      "price": 49.99,
+      "stock": 50,
+      "image": "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500"
+    },
+    {
+      "id": "6",
+      "sku": "PROD-006",
+      "name": "USB-C Hub",
+      "description": "7-in-1 USB-C hub with HDMI and SD card reader",
+      "price": 39.99,
+      "stock": 0,
+      "image": "https://images.unsplash.com/photo-1625948515291-69613efd103f?w=500"
+    },
+    {
+      "id": "7",
+      "sku": "PROD-007",
+      "name": "4K Webcam",
+      "description": "Professional 4K webcam with auto-focus",
+      "price": 129.99,
+      "stock": 8,
+      "image": "https://images.unsplash.com/photo-1587826080692-f439cd0b70da?w=500"
+    },
+    {
+      "id": "8",
+      "sku": "PROD-008",
+      "name": "Portable SSD 1TB",
+      "description": "High-speed portable SSD with 1TB storage",
+      "price": 89.99,
+      "stock": 25,
+      "image": "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=500"
+    },
+    {
+      "id": "9",
+      "sku": "PROD-009",
+      "name": "Desk Lamp LED",
+      "description": "Adjustable LED desk lamp with touch control",
+      "price": 34.99,
+      "stock": 1,
+      "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500"
+    },
+    {
+      "id": "10",
+      "sku": "PROD-010",
+      "name": "Phone Stand",
+      "description": "Adjustable aluminum phone stand",
+      "price": 19.99,
+      "stock": 100,
+      "image": "https://images.unsplash.com/photo-1601524909162-ae8725290836?w=500"
+    },
+    {
+      "id": "11",
+      "sku": "PROD-011",
+      "name": "Noise Cancelling Earbuds",
+      "description": "True wireless earbuds with active noise cancellation",
+      "price": 179.99,
+      "stock": 12,
+      "image": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500"
+    },
+    {
+      "id": "12",
+      "sku": "PROD-012",
+      "name": "Monitor Arm Mount",
+      "description": "Single monitor arm mount with cable management",
+      "price": 64.99,
+      "stock": 3,
+      "image": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500"
+    },
+    {
+      "id": "13",
+      "sku": "PROD-013",
+      "name": "Cable Management Kit",
+      "description": "Complete cable management solution for desks",
+      "price": 24.99,
+      "stock": 0,
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500"
+    },
+    {
+      "id": "14",
+      "sku": "PROD-014",
+      "name": "Bluetooth Speaker",
+      "description": "Waterproof portable Bluetooth speaker",
+      "price": 59.99,
+      "stock": 18,
+      "image": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500"
+    },
+    {
+      "id": "15",
+      "sku": "PROD-015",
+      "name": "Screen Cleaner Kit",
+      "description": "Professional screen cleaning kit with microfiber cloth",
+      "price": 12.99,
+      "stock": 2,
+      "image": "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=500"
+    }
+  ],
+  "cartItems": [],
+  "orders": [],
+  "counters": {
+    "userCount": 1,
+    "orderCount": 1000,
+    "cartCount": 0
+  }
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { MockDataStore } from '../data/MockDataStore';
+import { ApiDataStore } from '../data/ApiDataStore';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import SignInNotice from '../components/SignInNotice';
@@ -25,7 +25,7 @@ const ProductsPage = () => {
   const loadProducts = async () => {
     try {
       setIsLoading(true);
-      const loadedProducts = await MockDataStore.getProducts();
+      const loadedProducts = await ApiDataStore.getProducts();
       setProducts(loadedProducts);
     } catch (err) {
       setError('Failed to load products');

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
-import { MockDataStore } from './data/MockDataStore';
+import { ApiDataStore } from './data/ApiDataStore';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     // Initialize sample data when the app loads (only if not already initialized)
     const initData = async () => {
-      await MockDataStore.initializeSampleData();
+      await ApiDataStore.initializeSampleData();
     };
     initData();
   }, []);

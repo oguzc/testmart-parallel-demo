@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { CartItem, Product, CartContextType } from '../types';
-import { MockDataStore } from '../data/MockDataStore';
+import { ApiDataStore } from '../data/ApiDataStore';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -40,7 +40,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const addToCart = async (productId: string): Promise<void> => {
     try {
-      const product = await MockDataStore.getProductById(productId);
+      const product = await ApiDataStore.getProductById(productId);
       if (!product) {
         throw new Error('Product not found');
       }
@@ -72,7 +72,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       });
 
       // Update product stock (simulate inventory management)
-      await MockDataStore.updateProductStock(productId, product.stock - 1);
+      await ApiDataStore.updateProductStock(productId, product.stock - 1);
     } catch (error) {
       console.error('Error adding to cart:', error);
       throw error;

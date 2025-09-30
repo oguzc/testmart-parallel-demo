@@ -4,7 +4,7 @@ import { ArrowLeftIcon, ShoppingCartIcon, HeartIcon } from '@heroicons/react/24/
 import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { MockDataStore } from '../data/MockDataStore';
+import { ApiDataStore } from '../data/ApiDataStore';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import FormCard from '../components/FormCard';
@@ -36,7 +36,7 @@ const ProductDetailPage = () => {
     try {
       setIsLoading(true);
       setError('');
-      const products = await MockDataStore.getProducts();
+      const products = await ApiDataStore.getProducts();
       const loadedProduct = products.find(p => p.id === productId);
       if (loadedProduct) {
         // Generate additional product images for demo

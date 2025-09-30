@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { MockDataStore } from '../data/MockDataStore';
+import { ApiDataStore } from '../data/ApiDataStore';
 import FormCard from '../components/FormCard';
 import type { Order } from '../types';
 import './CheckoutPage.css';
@@ -48,7 +48,7 @@ const CheckoutPage = () => {
         shippingAddress
       };
 
-      await MockDataStore.createOrder(order);
+      await ApiDataStore.createOrder(order);
       clearCart();
 
       // Redirect to order confirmation page

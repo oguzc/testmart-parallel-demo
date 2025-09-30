@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { User, AuthContextType } from '../types';
-import { MockDataStore } from '../data/MockDataStore';
+import { ApiDataStore } from '../data/ApiDataStore';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 300));
       
-      const foundUser = await MockDataStore.getUserByEmail(email);
+      const foundUser = await ApiDataStore.getUserByEmail(email);
       if (!foundUser) {
         throw new Error('User not found');
       }
@@ -77,7 +77,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         password
       };
       
-      const createdUser = await MockDataStore.createUser(newUser);
+      const createdUser = await ApiDataStore.createUser(newUser);
       
       // Auto-login after registration
       const userSession = { ...createdUser };
