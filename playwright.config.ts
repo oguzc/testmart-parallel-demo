@@ -58,4 +58,6 @@ export default defineConfig({
 
   /* Global setup for test environment */
   globalSetup: './tests/fixtures/global-setup.ts',
+  /* Global teardown to reset database after tests */
+  globalTeardown: './tests/fixtures/global-teardown.ts',
 });
