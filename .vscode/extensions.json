@@ -9,6 +9,7 @@
 
     // Playwright Testing
     "ms-playwright.playwright",
+    "microsoft.playwright-mcp",
 
     // Tailwind CSS
     "bradlc.vscode-tailwindcss",
