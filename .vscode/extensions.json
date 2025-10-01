@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    // TypeScript & JavaScript
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // React Development
+    "dsznajder.es7-react-js-snippets",
+
+    // Playwright Testing
+    "ms-playwright.playwright",
+
+    // Tailwind CSS
+    "bradlc.vscode-tailwindcss",
+
+    // Utilities
+    "christian-kohler.path-intellisense",
+    "usernamehw.errorlens"
+  ]
+}
